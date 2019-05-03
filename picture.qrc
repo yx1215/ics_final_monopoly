@@ -1,0 +1,5 @@
+<!DOCTYPE RCC><RCC version="1.0">
+ <qresource prefix="/figure">
+    <file alias="ics_game_cover.jpg">./figure/ics_game_cover.jpg</file>
+  </qresource>
+</RCC>
