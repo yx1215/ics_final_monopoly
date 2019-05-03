@@ -39,7 +39,7 @@ When adding a picture to a label/button, choose `border-image` instead of `backg
 (b) Run the following code in the terminal:
 
 ```bash
-python.app -m PyQt5.uic.pyuic test.ui -o test.py
+pyuci5 -m test.ui -o test.py
 pyrcc5 picture.qrc -o picture_rc.py
 
 ```

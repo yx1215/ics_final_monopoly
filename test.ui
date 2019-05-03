@@ -14,33 +14,11 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QLabel" name="label">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>0</y>
-      <width>791</width>
-      <height>561</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">border-image: url(:/figure/ics_game_cover.jpg);</string>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="pixmap">
-     <pixmap resource="picture.qrc">:/figure/ics_game_cover.jpg</pixmap>
-    </property>
-    <property name="scaledContents">
-     <bool>true</bool>
-    </property>
-   </widget>
    <widget class="QPushButton" name="pushButton">
     <property name="geometry">
      <rect>
-      <x>624</x>
-      <y>392</y>
+      <x>635</x>
+      <y>393</y>
       <width>113</width>
       <height>32</height>
      </rect>
@@ -52,7 +30,7 @@
    <widget class="QPushButton" name="pushButton_2">
     <property name="geometry">
      <rect>
-      <x>626</x>
+      <x>634</x>
       <y>475</y>
       <width>113</width>
       <height>32</height>
@@ -62,6 +40,36 @@
      <string>exit</string>
     </property>
    </widget>
+   <widget class="QGraphicsView" name="graphicsView">
+    <property name="geometry">
+     <rect>
+      <x>-5</x>
+      <y>1</y>
+      <width>811</width>
+      <height>561</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border-image: url(:/figure/ics_game_cover.jpg);</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>320</x>
+      <y>110</y>
+      <width>60</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
+    </property>
+   </widget>
+   <zorder>graphicsView</zorder>
+   <zorder>pushButton</zorder>
+   <zorder>pushButton_2</zorder>
+   <zorder>label</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -86,12 +94,12 @@
    <slot>clear()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>689</x>
-     <y>430</y>
+     <x>661</x>
+     <y>427</y>
     </hint>
     <hint type="destinationlabel">
-     <x>580</x>
-     <y>350</y>
+     <x>344</x>
+     <y>142</y>
     </hint>
    </hints>
   </connection>
