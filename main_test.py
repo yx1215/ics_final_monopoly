@@ -14,9 +14,8 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
     myWin = MyWindow()
     app.startingUp()
-    app.exec()
+    myWin.show()
+    sys.exit(app.exec_())
 
-    while True:
-        myWin.show()
 
 
