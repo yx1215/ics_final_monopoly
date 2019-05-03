@@ -29,11 +29,11 @@ in the above file in the `<qresource>` section. After this, the code should beco
 
 After reloading this file in Qt Designer, you can then find the new added picture in resource section.
 
-##2.How to make a picture fit the label/button.
+## 2.How to make a picture fit the label/button.
 
 When adding a picture to a label/button, choose `border-image` instead of `background-image`.
 
-##3.How to generate .py file from Qt Designer.
+## 3.How to generate .py file from Qt Designer.
 
 (a) Save Qt Desinger as a .ui file, for example, `test.ui`.
 (b) Run the following code in the terminal:
