@@ -1,5 +1,6 @@
 import sys
 from PyQt5.QtWidgets import QApplication, QMainWindow
+from PyQt5.QtCore import QPropertyAnimation, QRect
 from test import *
 import random
 
@@ -100,8 +101,16 @@ class MyWindow(QMainWindow, Ui_MainWindow):
 
         # main game variables
         self.player_name1 = None
+        self.x1 = self.player1.x()
+        self.y1 = self.player1.y()
+        self.x2 = self.player2.x()
+        self.y2 = self.player2.x()
         self.player_name2 = None
         self.turn_count = 0
+
+        #
+        self.anim1 = QPropertyAnimation(self.player1, b"geometry")
+        self.anim1.setDuration(1000)
 
     def setName1(self, name):
         self.player_name1 = name
@@ -165,7 +174,9 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         self.turn.setText("{}".format(self.turn_count // 2 + 1))
         num = random.randint(1, 6)
         self.stepnum.setText("{}".format(num))
-        self.repaint()
+        self.anim1.setStartValue(QRect(10, 50, 41, 51))
+        self.anim1.setEndValue(QRect(100, 50, 41, 51))
+        self.anim1.start()
 
     def end(self):
         self.hide()
