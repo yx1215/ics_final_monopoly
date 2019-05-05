@@ -1,5 +1,13 @@
 <!DOCTYPE RCC><RCC version="1.0">
- <qresource prefix="/figure">
-    <file alias="ics_game_cover.jpg">./figure/ics_game_cover.jpg</file>
-  </qresource>
+    <qresource prefix="/figure">
+        <file alias="blueman.png">./figure/blueman.png</file>
+        <file alias="exit.png">./figure/exit.png</file>
+        <file alias="ics_game_cover.jpg">./figure/ics_game_cover.jpg</file>
+        <file alias="infoframe.png">./figure/infoframe.png</file>
+        <file alias="main_game_background.jpg">./figure/main_game_background.jpg</file>
+        <file alias="start.png">./figure/start.png</file>
+        <file alias="stepbott.png">./figure/stepbott.png</file>
+        <file alias="yellowman.png">./figure/yellowman.png</file>
+        <file alias="white.png">./figure/white.png</file>
+    </qresource>
 </RCC>

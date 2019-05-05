@@ -6,102 +6,78 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
+    <width>960</width>
     <height>600</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>960</width>
+    <height>600</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>960</width>
+    <height>600</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QPushButton" name="pushButton">
+   <widget class="QPushButton" name="exit">
     <property name="geometry">
      <rect>
-      <x>635</x>
-      <y>393</y>
-      <width>113</width>
-      <height>32</height>
+      <x>716</x>
+      <y>482</y>
+      <width>220</width>
+      <height>80</height>
      </rect>
     </property>
-    <property name="text">
-     <string>play</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pushButton_2">
-    <property name="geometry">
-     <rect>
-      <x>634</x>
-      <y>475</y>
-      <width>113</width>
-      <height>32</height>
-     </rect>
+    <property name="styleSheet">
+     <string notr="true">border-image: url(:/figure/exit.png);</string>
     </property>
     <property name="text">
-     <string>exit</string>
+     <string/>
     </property>
    </widget>
    <widget class="QGraphicsView" name="graphicsView">
     <property name="geometry">
      <rect>
-      <x>-5</x>
-      <y>1</y>
-      <width>811</width>
-      <height>561</height>
+      <x>0</x>
+      <y>0</y>
+      <width>960</width>
+      <height>600</height>
      </rect>
     </property>
     <property name="styleSheet">
      <string notr="true">border-image: url(:/figure/ics_game_cover.jpg);</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label">
+   <widget class="QPushButton" name="play">
     <property name="geometry">
      <rect>
-      <x>320</x>
-      <y>110</y>
-      <width>60</width>
-      <height>16</height>
+      <x>716</x>
+      <y>395</y>
+      <width>220</width>
+      <height>80</height>
      </rect>
     </property>
+    <property name="styleSheet">
+     <string notr="true">border-image: url(:/figure/start.png);</string>
+    </property>
     <property name="text">
-     <string>TextLabel</string>
+     <string/>
     </property>
    </widget>
    <zorder>graphicsView</zorder>
-   <zorder>pushButton</zorder>
-   <zorder>pushButton_2</zorder>
-   <zorder>label</zorder>
+   <zorder>exit</zorder>
+   <zorder>play</zorder>
   </widget>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>800</width>
-     <height>22</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <resources>
   <include location="picture.qrc"/>
  </resources>
- <connections>
-  <connection>
-   <sender>pushButton</sender>
-   <signal>clicked()</signal>
-   <receiver>label</receiver>
-   <slot>clear()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>661</x>
-     <y>427</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>344</x>
-     <y>142</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>
