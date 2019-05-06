@@ -84,13 +84,13 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         self.turn.setObjectName("turn")
 
         self.player1 = QtWidgets.QLabel(self.centralwidget)
-        self.player1.setGeometry(QtCore.QRect(10, 50, 41, 51))
+        self.player1.setGeometry(QtCore.QRect(10, 55, 41, 51))
         self.player1.setStyleSheet("border-image: url(:/figure/yellowman.png);")
         self.player1.setText("")
         self.player1.setObjectName("player1")
 
         self.player2 = QtWidgets.QLabel(self.centralwidget)
-        self.player2.setGeometry(QtCore.QRect(60, 50, 41, 51))
+        self.player2.setGeometry(QtCore.QRect(60, 55, 41, 51))
         self.player2.setStyleSheet("border-image: url(:/figure/blueman.png);")
         self.player2.setText("")
         self.player2.setObjectName("player1_2")
@@ -100,18 +100,21 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         self.connect_buttons()
 
         # main game variables
+        self.bdposition = [[60, 55], [150, 55], [270, 55], [360, 55], [480, 55], [580, 55], [680, 55], [780, 55],
+                           [900, 55], [900, 150], [900, 245], [900, 340], [900, 445], [900, 550],
+                           [780, 550], [680, 550], [580, 550], [480, 550], [360, 550], [270, 550],
+                           [150, 550], [60, 550], [60, 445], [60, 340], [60, 245], [60, 150]]
         self.player_name1 = None
-        self.x1 = self.player1.x()
-        self.y1 = self.player1.y()
-        self.x2 = self.player2.x()
-        self.y2 = self.player2.x()
         self.player_name2 = None
+        self.player1_count = 0
+        self.player2_count = 0
         self.turn_count = 0
 
         #
         self.anim1 = QPropertyAnimation(self.player1, b"geometry")
         self.anim1.setDuration(1000)
-
+        self.anim2 = QPropertyAnimation(self.player2, b"geometry")
+        self.anim2.setDuration(1000)
     def setName1(self, name):
         self.player_name1 = name
 
@@ -170,13 +173,28 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         # self.repaint()
 
     def roll(self):
-        self.turn_count += 1
-        self.turn.setText("{}".format(self.turn_count // 2 + 1))
-        num = random.randint(1, 6)
-        self.stepnum.setText("{}".format(num))
-        self.anim1.setStartValue(QRect(10, 50, 41, 51))
-        self.anim1.setEndValue(QRect(100, 50, 41, 51))
-        self.anim1.start()
+        if self.anim1.state() != self.anim1.Running:
+            num = random.randint(1, 6)
+            if self.turn_count % 2 == 0:
+                curr_x, curr_y = self.bdposition[self.player1_count]
+                next_count = (self.player1_count + num) % 26
+                next_x, next_y = self.bdposition[next_count]
+                self.stepnum.setText("{}".format(num))
+                self.player1_count = next_count
+                self.anim1.setStartValue(QRect(curr_x, curr_y, 41, 51))
+                self.anim1.setEndValue(QRect(next_x, next_y, 41, 51))
+                self.anim1.start()
+            else:
+                curr_x, curr_y = self.bdposition[self.player2_count]
+                next_count = (self.player2_count + num) % 26
+                next_x, next_y = self.bdposition[next_count]
+                self.stepnum.setText("{}".format(num))
+                self.player2_count = next_count
+                self.anim2.setStartValue(QRect(curr_x, curr_y, 41, 51))
+                self.anim2.setEndValue(QRect(next_x, next_y, 41, 51))
+                self.anim2.start()
+            self.turn.setText("{}".format(self.turn_count // 2 + 1))
+            self.turn_count += 1
 
     def end(self):
         self.hide()
