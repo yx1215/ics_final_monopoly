@@ -3,13 +3,15 @@ from PyQt5.QtWidgets import QApplication, QMainWindow
 from PyQt5.QtCore import QPropertyAnimation, QRect
 from test import *
 import random
+from chat_utils import *
+import json
 
 
 class MyWindow(QMainWindow, Ui_MainWindow):
-    def __init__(self, parent=None):
+    def __init__(self, s, parent=None):
         super(MyWindow, self).__init__(parent)
         self.setupUi(self)
-
+        self.s = s
         # main game items
         self.step = QtWidgets.QPushButton(self.centralwidget)
         self.step.setGeometry(QtCore.QRect(683, 140, 65, 56))
@@ -93,7 +95,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         self.player2.setGeometry(QtCore.QRect(60, 55, 41, 51))
         self.player2.setStyleSheet("border-image: url(:/figure/blueman.png);")
         self.player2.setText("")
-        self.player2.setObjectName("player1_2")
+        self.player2.setObjectName("player2")
 
         # main game set up
         self.hide_main_game()
@@ -115,6 +117,10 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         self.anim1.setDuration(1000)
         self.anim2 = QPropertyAnimation(self.player2, b"geometry")
         self.anim2.setDuration(1000)
+
+    def turn(self):
+        return self.player_name1 if self.turn_count % 2 == 0 else self.player_name2
+
     def setName1(self, name):
         self.player_name1 = name
 
@@ -167,13 +173,15 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         self.exit.clicked.connect(self.end)
 
     def start(self):
+        d = {"action": "gaming", "update": "start"}
+        mysend(self.s, json.dumps(d))
         self.graphicsView.setStyleSheet("border-image: url(:/figure/main_game_background.jpg);")
         self.hide_cover()
         self.show_main_game()
         # self.repaint()
 
     def roll(self):
-        if self.anim1.state() != self.anim1.Running:
+        if self.anim1.state() != self.anim1.Running and self.anim2.state() != self.anim2.Running:
             num = random.randint(1, 6)
             if self.turn_count % 2 == 0:
                 curr_x, curr_y = self.bdposition[self.player1_count]
@@ -193,16 +201,53 @@ class MyWindow(QMainWindow, Ui_MainWindow):
                 self.anim2.setStartValue(QRect(curr_x, curr_y, 41, 51))
                 self.anim2.setEndValue(QRect(next_x, next_y, 41, 51))
                 self.anim2.start()
+            self.step.setEnabled(False)
+            d = {"action": "gaming", "update": "roll", "num": num}
+            mysend(self.s, json.dumps(d))
             self.turn.setText("{}".format(self.turn_count // 2 + 1))
             self.turn_count += 1
 
+    def update_board(self, msg):
+        if msg["update"] == "roll":
+            num = msg["num"]
+            if self.turn_count % 2 == 0:
+                curr_x, curr_y = self.bdposition[self.player1_count]
+                next_count = (self.player1_count + num) % 26
+                next_x, next_y = self.bdposition[next_count]
+                self.stepnum.setText("{}".format(num))
+                self.player1_count = next_count
+                self.anim1.setStartValue(QRect(curr_x, curr_y, 41, 51))
+                self.anim1.setEndValue(QRect(next_x, next_y, 41, 51))
+                self.anim1.start()
+            else:
+                curr_x, curr_y = self.bdposition[self.player2_count]
+                next_count = (self.player2_count + num) % 26
+                next_x, next_y = self.bdposition[next_count]
+                self.stepnum.setText("{}".format(num))
+                self.player2_count = next_count
+                self.anim2.setStartValue(QRect(curr_x, curr_y, 41, 51))
+                self.anim2.setEndValue(QRect(next_x, next_y, 41, 51))
+                self.anim2.start()
+            self.step.setEnabled(True)
+            self.turn.setText("{}".format(self.turn_count // 2 + 1))
+            self.turn_count += 1
+        elif msg["update"] == "start":
+            self.graphicsView.setStyleSheet("border-image: url(:/figure/main_game_background.jpg);")
+            self.hide_cover()
+            self.show_main_game()
+            self.step.setEnabled(False)
+        elif msg["update"] == "stop":
+            self.hide()
+
     def end(self):
+        d = {"action": "gaming", "update": "stop"}
+        mysend(self.s, json.dumps(d))
         self.hide()
 
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    myWin = MyWindow()
+    myWin = MyWindow(None)
     app.startingUp()
     myWin.show()
 
