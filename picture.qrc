@@ -9,5 +9,7 @@
         <file alias="stepbott.png">./figure/stepbott.png</file>
         <file alias="yellowman.png">./figure/yellowman.png</file>
         <file alias="white.png">./figure/white.png</file>
+        <file alias="yes.png">./figure/yes.png</file>
+        <file alias="no.png">./figure/no.png</file>
     </qresource>
 </RCC>

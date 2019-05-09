@@ -73,7 +73,6 @@ class ClientSM:
                     time_in = json.loads(myrecv(self.s))["results"]
                     self.out_msg += "Time is: " + time_in
 
-
                 elif my_msg == 'who':
                     mysend(self.s, json.dumps({"action":"list"}))
                     logged_in = json.loads(myrecv(self.s))["results"]
@@ -131,6 +130,8 @@ class ClientSM:
                     self.state = S_GAMING
                     self.app.startingUp()
                     self.myWind.show()
+                    self.myWind.setName1(self.me)
+                    self.myWind.setName2(self.peer)
 
                 else:
                     mysend(self.s, json.dumps({"action": "exchange", "from": "[" + self.me + "]", "message": my_msg}))

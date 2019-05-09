@@ -15,6 +15,7 @@ import pickle as pkl
 from chat_utils import *
 import chat_group as grp
 
+
 class Server:
     def __init__(self):
         self.new_clients = [] #list of new sockets of which the user id is not known
@@ -28,7 +29,7 @@ class Server:
         self.server.listen(5)
         self.all_sockets.append(self.server)
         #initialize past chat indices
-        self.indices={}
+        self.indices = {}
         # sonnet
         self.sonnet_f = open('AllSonnets.txt.idx', 'rb')
         self.sonnet = pkl.load(self.sonnet_f)
@@ -218,7 +219,7 @@ class Server:
                if newc in read:
                    self.login(newc)
            print('checking for new connections..')
-           if self.server in read :
+           if self.server in read:
                #new client request
                sock, address=self.server.accept()
                self.new_client(sock)
