@@ -401,19 +401,23 @@ class MyWindow(QMainWindow, Ui_MainWindow):
 
     def pass_building(self, player, x, y):
         assert isinstance(player, Player)
+        if player.name == self.player_name1:
+            other = self.player2
+        else:
+            other = self.player1
         building = self.building_dic[(x, y)]
         if building is not None:
             # fate part
             if building.objectName() == "bursar":
                 player.cash += 1000
                 self.fate.setText("Get funded by bursar.")
-                self.fate.show()
             # other fates here
 
             # update once after fate.
+            self.fate.show()
             self.set_player1_info()
             self.set_player2_info()
-
+            # buy land
             if building.owner is None:
                 building_name = building.objectName()
                 self.info.setText("You are passing {0}.".format(building_name))
@@ -423,8 +427,11 @@ class MyWindow(QMainWindow, Ui_MainWindow):
                 self.info.show()
                 self.yes.show()
                 self.no.show()
+
+            # passing others' building: fined
             elif player.name != building.owner:
                 fined_money = player.fine_money(building.level)
+                other.cash += fined_money
                 self.info.setText("You aer passing others building, fined ${}.".format(fined_money))
                 self.set_player1_info()
                 self.set_player2_info()
@@ -435,6 +442,8 @@ class MyWindow(QMainWindow, Ui_MainWindow):
                 # print(self.step.isEnabled())
                 # self.step.repaint()
                 # print(self.step.isEnabled())
+
+            # passing my building: upgrade
             elif player.name == building.owner:
                 self.info.setText("You are passing your own building.")
                 self.buy_info.setText("Do you want to upgrade?")
