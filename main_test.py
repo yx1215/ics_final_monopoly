@@ -265,13 +265,13 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         self.bdposition = [[60, 55], [150, 55], [270, 55], [360, 55], [480, 55], [580, 55], [680, 55], [780, 55],
                            [900, 55], [900, 140], [900, 235], [900, 335], [900, 445], [900, 550],
                            [780, 550], [680, 550], [580, 550], [480, 550], [360, 550], [270, 550],
-                           [150, 550], [60, 550], [60, 445], [60, 335], [60, 235], [60, 150]]
+                           [150, 550], [60, 550], [60, 425], [60, 335], [60, 235], [60, 150]]
         self.building_dic = {(60, 55): None, (150, 55): self.green_center, (270, 55): self.public_safety, (360, 55): self.student_life,
                              (480, 55): self.Room110_Gallery, (580, 55): self.mail_room, (680, 55): self.luckin, (780, 55): self.cafeteria,
                              (900, 55): None, (900, 140): self.the_box, (900, 235): self.auditorium, (900, 335): self.cafe,
                              (900, 445): self.bursar, (900, 550): None, (780, 550): self.IT_center, (680, 550): self.library,
                              (580, 550): self.arc, (480, 550): self.advisor_office, (360, 550): self.H_W_center, (270, 550): self.CDC,
-                             (150, 550): self.mac_lab, (60, 550): self.ally_lounge, (60, 445): self.fos_lab, (60, 335): self.piano_room,
+                             (150, 550): self.mac_lab, (60, 550): self.ally_lounge, (60, 425): self.fos_lab, (60, 335): self.piano_room,
                              (60, 235): self.ima_lab, (60, 150): self.f15}
 
         # main game set up
@@ -407,6 +407,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
             if building.objectName() == "bursar":
                 player.cash += 1000
                 self.fate.setText("Get funded by bursar.")
+                self.fate.show()
             # other fates here
 
             # update once after fate.
@@ -425,6 +426,8 @@ class MyWindow(QMainWindow, Ui_MainWindow):
             elif player.name != building.owner:
                 fined_money = player.fine_money(building.level)
                 self.info.setText("You aer passing others building, fined ${}.".format(fined_money))
+                self.set_player1_info()
+                self.set_player2_info()
                 self.info.show()
                 self.yes.show()
                 self.yes.clicked.connect(self.reject)
@@ -460,10 +463,11 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         self.yes.hide()
         self.no.hide()
         self.buy_info.hide()
-
+        self.fate.hide()
         self.step.setEnabled(True)
 
     def reject(self):
+        self.fate.hide()
         self.yes.hide()
         self.no.hide()
         self.yes.disconnect()
