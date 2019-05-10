@@ -403,9 +403,11 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         assert isinstance(player, Player)
         building = self.building_dic[(x, y)]
         if building is not None:
+            # fate part
             if building.objectName() == "bursar":
                 player.cash += 1000
                 self.fate.setText("Get funded by bursar.")
+            # other fates here
 
             # update once after fate.
             self.set_player1_info()

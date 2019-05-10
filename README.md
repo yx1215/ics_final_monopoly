@@ -72,4 +72,23 @@ if __name__ == '__main__':
 In order to test the PyQt window, please run `main_test.py`.
 (Notice that if you do not generate `picture.py`, pictures will not be available when you run `main_test.py`.)
 
-
+## 4. How to add fate events.
+You can find a function named `pass_building()` in the file `main_test.py`. It has codes like:
+```python
+def pass_building(self, player, x, y):
+    assert isinstance(player, Player)
+    building = self.building_dic[(x, y)]
+    if building is not None:
+        # fate part
+        if building.objectName() == "bursar":
+            player.cash += 1000
+            self.fate.setText("Get funded by bursar.")
+        # other fates here
+        elif building.objectName() == <building_name>:
+            <event>
+        # update once after fate.
+        self.set_player1_info()
+        self.set_player2_info()
+        ...
+```
+`<building_name>` means the building to need to pass to make this `<event>` happen.
