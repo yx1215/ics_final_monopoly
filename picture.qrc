@@ -11,5 +11,10 @@
         <file alias="white.png">./figure/white.png</file>
         <file alias="yes.png">./figure/yes.png</file>
         <file alias="no.png">./figure/no.png</file>
+        <file alias="5000.png">./figure/5000.png</file>
+        <file alias="10000.png">./figure/10000.png</file>
+        <file alias="20000.png">./figure/20000.png</file>
+        <file alias="50000.png">./figure/50000.png</file>
+        <file alias="bursarinfo.png">./figure/bursarinfo.png</file>
     </qresource>
 </RCC>

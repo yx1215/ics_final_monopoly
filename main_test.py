@@ -1,8 +1,9 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow
+from PyQt5.QtWidgets import QApplication, QMainWindow, QDialog
 from PyQt5.QtCore import QPropertyAnimation, QRect
 from Building import Building, Player
 from test import *
+from bursar import *
 import random
 from chat_utils import *
 import json
@@ -14,6 +15,9 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         super(MyWindow, self).__init__(parent)
         self.setupUi(self)
         self.s = s
+        self.bursar_window = QDialog()
+        self.bursar_dialog = Ui_Dialog()
+        self.bursar_dialog.setupUi(self.bursar_window)
         # main game items
         self.step = QtWidgets.QPushButton(self.centralwidget)
         self.step.setGeometry(QtCore.QRect(683, 140, 65, 56))
@@ -220,7 +224,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         self.advisor_office.setGeometry(QtCore.QRect(452, 480, 101, 15))
         self.advisor_office.setStyleSheet("background-color: rgb(255, 255, 255);")
         self.advisor_office.setText("")
-        self.advisor_office.setObjectName("advisor_office")
+        self.advisor_office.setObjectName("adviser_office")
         self.H_W_center = Building(self.centralwidget)
         self.H_W_center.setGeometry(QtCore.QRect(348, 480, 104, 15))
         self.H_W_center.setStyleSheet("background-color: rgb(255, 255, 255);")
@@ -367,11 +371,13 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         self.graphicsView.setStyleSheet("border-image: url(:/figure/main_game_background.jpg);")
         self.hide_cover()
         self.show_main_game()
+        # self.bursar_window.show()
         # self.repaint()
 
     def roll(self):
         if self.anim1.state() != self.anim1.Running and self.anim2.state() != self.anim2.Running:
             num = random.randint(1, 6)
+            num = 3
             if self.turn_count % 2 == 0:
                 curr_x, curr_y = self.bdposition[self.player1_count]
                 next_count = (self.player1_count + num) % 26
@@ -409,19 +415,24 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         if building is not None:
             # fate part
             if building.objectName() == "bursar":
-                player.cash += 1000
-                self.fate.setText("Get funded by bursar.")
+                self.bursar_window.show()
+                # player.cash += 1000
+                # self.fate.setText("Get funded by bursar.")
+                self.yes.show()
+                self.yes.clicked.connect(self.reject)
             # other fates here
             elif building.objectName() == "CDC":
                 pass
             elif building.objectName() == "student_life":
-                pass
+                destiny = self.destiny(player)
+                self.fate.setText(destiny)
+                self.yes.show()
+                self.yes.clicked.connect(self.reject)
             # update once after fate.
-            self.fate.show()
-            self.set_player1_info()
-            self.set_player2_info()
+
             # buy land
-            if self.objectName() not in ["bursar", "CDC", "student_life"]:
+            # if building.objectName() not in ["bursar", "CDC", "student_life"]:
+            else:
                 if building.owner is None:
                     building_name = building.objectName()
                     self.info.setText("You are passing {0}.".format(building_name))
@@ -437,8 +448,6 @@ class MyWindow(QMainWindow, Ui_MainWindow):
                     fined_money = player.fine_money(building.level)
                     other.cash += fined_money
                     self.info.setText("You are passing others building, fined ${}.".format(fined_money))
-                    self.set_player1_info()
-                    self.set_player2_info()
                     self.info.show()
                     self.yes.show()
                     self.yes.clicked.connect(self.reject)
@@ -456,6 +465,9 @@ class MyWindow(QMainWindow, Ui_MainWindow):
                     self.yes.clicked.connect(lambda: self.buy(player, building))
                     self.yes.show()
                     self.no.show()
+            self.fate.show()
+            self.set_player1_info()
+            self.set_player2_info()
         else:
             self.info.setText("No buildings to buy here.")
             self.info.show()
@@ -481,12 +493,38 @@ class MyWindow(QMainWindow, Ui_MainWindow):
 
     def reject(self):
         self.fate.hide()
+        self.fate.setText("")
         self.yes.hide()
         self.no.hide()
         self.yes.disconnect()
         self.buy_info.hide()
         self.info.hide()
         self.step.setEnabled(True)
+
+    def destiny(self, player):
+        assert isinstance(player, Player)
+        # list_destiny = [['You need to go to the ARC to revise your essay.', 2],
+                        # ['You find hair in your meal and decide to go to Health & Wellness for psychological relief.',
+                        #  1],
+                        # ['You were reported for your behavior when participating the student union election.', 1],
+                        # ['You need to go to the eastern-oasis for military training.', 2],
+                        # ['You were asked to participate in the graduation ceremony at the Oriental Pearl Tower.', 1],
+                        # ['You plan to practice your piano at the piano room.', 1],
+                        # ['You plan to buy luck-in coffee.', 1],
+                        # ['You were collapsed by the smell of the moor besom in front of AB.', 1],
+        list_destiny = [['Your stuff in 314 has been removed \nand lost, you lost $2000.', 2000],
+                        ['You are informed to pay \ntuition fee for $3000.', 3000],
+                        ['You bought Mate Tea for $2000 during \nGPS to get rid of sleepiness.', 2000],
+                        ['You missed shuttle and get a \ntaxi back to the dorm for $5000.', 5000],
+                        ['You bought bubble tea for $1000.', 1000],
+                        ['You purchased textbook for $5000.', 5000],
+                        ['You lost your campus card,  \nyou have to go to Public Safety \nto replace it for $5000.', 5000],
+                        ['You bought tickets and clothes \nfor Spring Formal for $1000.', 1000]]
+        chosen_destiny = random.choice(list_destiny)
+        if chosen_destiny[1] > 10:
+            lost = chosen_destiny[1]
+            player.cash -= lost
+        return chosen_destiny[0]
 
     def update_board(self, msg):
         if msg["update"] == "roll":
