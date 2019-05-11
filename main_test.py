@@ -412,46 +412,50 @@ class MyWindow(QMainWindow, Ui_MainWindow):
                 player.cash += 1000
                 self.fate.setText("Get funded by bursar.")
             # other fates here
-
+            elif building.objectName() == "CDC":
+                pass
+            elif building.objectName() == "student_life":
+                pass
             # update once after fate.
             self.fate.show()
             self.set_player1_info()
             self.set_player2_info()
             # buy land
-            if building.owner is None:
-                building_name = building.objectName()
-                self.info.setText("You are passing {0}.".format(building_name))
-                self.buy_info.setText("Do you want to buy?")
-                self.yes.clicked.connect(lambda: self.buy(player, building))
-                self.buy_info.show()
-                self.info.show()
-                self.yes.show()
-                self.no.show()
+            if self.objectName() not in ["bursar", "CDC", "student_life"]:
+                if building.owner is None:
+                    building_name = building.objectName()
+                    self.info.setText("You are passing {0}.".format(building_name))
+                    self.buy_info.setText("Do you want to buy?")
+                    self.yes.clicked.connect(lambda: self.buy(player, building))
+                    self.buy_info.show()
+                    self.info.show()
+                    self.yes.show()
+                    self.no.show()
 
-            # passing others' building: fined
-            elif player.name != building.owner:
-                fined_money = player.fine_money(building.level)
-                other.cash += fined_money
-                self.info.setText("You aer passing others building, fined ${}.".format(fined_money))
-                self.set_player1_info()
-                self.set_player2_info()
-                self.info.show()
-                self.yes.show()
-                self.yes.clicked.connect(self.reject)
-                # self.step.setEnabled(True)
-                # print(self.step.isEnabled())
-                # self.step.repaint()
-                # print(self.step.isEnabled())
+                # passing others' building: fined
+                elif player.name != building.owner:
+                    fined_money = player.fine_money(building.level)
+                    other.cash += fined_money
+                    self.info.setText("You are passing others building, fined ${}.".format(fined_money))
+                    self.set_player1_info()
+                    self.set_player2_info()
+                    self.info.show()
+                    self.yes.show()
+                    self.yes.clicked.connect(self.reject)
+                    # self.step.setEnabled(True)
+                    # print(self.step.isEnabled())
+                    # self.step.repaint()
+                    # print(self.step.isEnabled())
 
-            # passing my building: upgrade
-            elif player.name == building.owner:
-                self.info.setText("You are passing your own building.")
-                self.buy_info.setText("Do you want to upgrade?")
-                self.buy_info.show()
-                self.info.show()
-                self.yes.clicked.connect(lambda: self.buy(player, building))
-                self.yes.show()
-                self.no.show()
+                # passing my building: upgrade
+                elif player.name == building.owner:
+                    self.info.setText("You are passing your own building.")
+                    self.buy_info.setText("Do you want to upgrade?")
+                    self.buy_info.show()
+                    self.info.show()
+                    self.yes.clicked.connect(lambda: self.buy(player, building))
+                    self.yes.show()
+                    self.no.show()
         else:
             self.info.setText("No buildings to buy here.")
             self.info.show()
