@@ -7,58 +7,104 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtWidgets import QDialog
 
+class Ui_Dialog(QDialog):
+    def __init__(self):
+        super(Ui_Dialog, self).__init__()
 
-class Ui_Dialog(object):
-    def setupUi(self, Dialog):
-        Dialog.setObjectName("Dialog")
-        Dialog.resize(620, 220)
-        Dialog.setMinimumSize(QtCore.QSize(620, 220))
-        Dialog.setMaximumSize(QtCore.QSize(620, 220))
-        Dialog.setStyleSheet("border-image: url(:/figure/bursarinfo.png);")
-        self.wuk = QtWidgets.QPushButton(Dialog)
-        self.wuk.setGeometry(QtCore.QRect(40, 140, 111, 61))
-        self.wuk.setStyleSheet("border-image: url(:/figure/5000.png);")
-        self.wuk.setText("")
-        self.wuk.setObjectName("wuk")
-        self.yiw = QtWidgets.QPushButton(Dialog)
-        self.yiw.setGeometry(QtCore.QRect(180, 140, 111, 61))
-        self.yiw.setStyleSheet("border-image: url(:/figure/10000.png);")
-        self.yiw.setText("")
-        self.yiw.setObjectName("yiw")
-        self.liangw = QtWidgets.QPushButton(Dialog)
-        self.liangw.setGeometry(QtCore.QRect(320, 140, 111, 61))
-        self.liangw.setStyleSheet("border-image: url(:/figure/20000.png);")
-        self.liangw.setText("")
-        self.liangw.setObjectName("liangw")
-        self.sanw = QtWidgets.QPushButton(Dialog)
-        self.sanw.setGeometry(QtCore.QRect(460, 140, 111, 61))
-        self.sanw.setStyleSheet("border-image: url(:/figure/50000.png);")
-        self.sanw.setText("")
-        self.sanw.setObjectName("sanw")
-        self.bucun = QtWidgets.QPushButton(Dialog)
-        self.bucun.setGeometry(QtCore.QRect(460, 20, 101, 51))
-        self.bucun.setStyleSheet("border-image: url(:/figure/no.png);")
-        self.bucun.setText("")
-        self.bucun.setObjectName("bucun")
-        self.bursarassets = QtWidgets.QLabel(Dialog)
+        self.result = 0
+        self.setObjectName("Dialog")
+        self.resize(620, 220)
+        self.setMinimumSize(QtCore.QSize(620, 220))
+        self.setMaximumSize(QtCore.QSize(620, 220))
+        self.setStyleSheet("border-image: url(:/figure/bursarinfo.png);")
+        self.wuqian = QtWidgets.QPushButton(self)
+        self.wuqian.setGeometry(QtCore.QRect(40, 140, 111, 61))
+        self.wuqian.setStyleSheet("border-image: url(:/figure/5000.png);")
+        self.wuqian.setText("")
+        self.wuqian.setObjectName("wuqian")
+        self.yiwan = QtWidgets.QPushButton(self)
+        self.yiwan.setGeometry(QtCore.QRect(180, 140, 111, 61))
+        self.yiwan.setStyleSheet("border-image: url(:/figure/10000.png);")
+        self.yiwan.setText("")
+        self.yiwan.setObjectName("yiwan")
+        self.liangwan = QtWidgets.QPushButton(self)
+        self.liangwan.setGeometry(QtCore.QRect(320, 140, 111, 61))
+        self.liangwan.setStyleSheet("border-image: url(:/figure/20000.png);")
+        self.liangwan.setText("")
+        self.liangwan.setObjectName("liangwan")
+        self.wuwan = QtWidgets.QPushButton(self)
+        self.wuwan.setGeometry(QtCore.QRect(460, 140, 111, 61))
+        self.wuwan.setStyleSheet("border-image: url(:/figure/50000.png);")
+        self.wuwan.setText("")
+        self.wuwan.setObjectName("wuwan")
+        self.reject = QtWidgets.QPushButton(self)
+        self.reject.setGeometry(QtCore.QRect(460, 20, 101, 51))
+        self.reject.setStyleSheet("border-image: url(:/figure/no.png);")
+        self.reject.setText("")
+        self.reject.setObjectName("reject")
+        self.bursarassets = QtWidgets.QLabel(self)
         self.bursarassets.setGeometry(QtCore.QRect(180, 70, 121, 21))
         self.bursarassets.setStyleSheet("border-image: url(:/bursarinfo/white.png);\n"
 "font: 15pt \"appo paint\";")
         self.bursarassets.setText("")
         self.bursarassets.setObjectName("bursarassets")
-        self.maxloan = QtWidgets.QLabel(Dialog)
+        self.maxloan = QtWidgets.QLabel(self)
         self.maxloan.setGeometry(QtCore.QRect(300, 100, 121, 21))
         self.maxloan.setStyleSheet("border-image: url(:/bursarinfo/white.png);\n"
 "font: 15pt \"appo paint\";")
         self.maxloan.setText("")
         self.maxloan.setObjectName("maxloan")
 
-        self.retranslateUi(Dialog)
-        QtCore.QMetaObject.connectSlotsByName(Dialog)
+        self.retranslateUi()
+        QtCore.QMetaObject.connectSlotsByName(self)
 
-    def retranslateUi(self, Dialog):
+        self.wuqian.clicked.connect(self.get_wuqian)
+        self.yiwan.clicked.connect(self.get_yiwan)
+        self.liangwan.clicked.connect(self.get_liangwan)
+        self.wuwan.clicked.connect(self.get_wuwan)
+        self.limit = 0
+
+    def retranslateUi(self):
         _translate = QtCore.QCoreApplication.translate
-        Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
+        self.setWindowTitle(_translate("Dialog", "Dialog"))
+
+    def set_info_text(self, maxloan, asset):
+        self.limit = maxloan
+        self.maxloan.setText(str(maxloan))
+        self.bursarassets.setText(str(asset))
+
+    def get_wuwan(self):
+        if self.limit >= 50000:
+            self.result = 50000
+        else:
+            self.result = None
+        self.hide()
+
+    def get_liangwan(self):
+        if self.limit >= 50000:
+            self.result = 50000
+        else:
+            self.result = None
+        self.hide()
+
+    def get_yiwan(self):
+        if self.limit >= 50000:
+            self.result = 50000
+        else:
+            self.result = None
+        self.hide()
+
+    def get_wuqian(self):
+        if self.limit >= 50000:
+            self.result = 50000
+        else:
+            self.result = None
+        self.hide()
+
+    def get_zero(self):
+        self.result = 0
+        self.hide()
 
 import picture_rc

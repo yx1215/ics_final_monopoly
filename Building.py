@@ -4,7 +4,8 @@ UPGRADE = 1000
 LAND = 2000
 LEVEL1 = 3000
 LEVEL2 = 4000
-ORIGINAL_CASH = 10000
+ORIGINAL_CASH = 100000
+
 
 class Building(QLabel):
 
@@ -35,6 +36,7 @@ class Player(QLabel):
         self.land = 0
         self.level1_house = 0
         self.level2_house = 0
+        self.loaned_money = 0
 
     def set_name(self, name):
         self.name = name
@@ -46,6 +48,16 @@ class Player(QLabel):
     def get_house(self):
         house = self.land + self.level1_house + self.level2_house
         return house
+
+    def get_max_loan(self):
+        max_loan = 0.6 * self.get_money()
+        return max_loan
+
+    def loan_money(self, loan):
+        self.loaned_money += loan
+
+    def pay_debt(self, money):
+        self.loaned_money -= money
 
     def initiate_color(self, suit):
         if suit == 1:

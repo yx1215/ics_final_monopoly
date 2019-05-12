@@ -15,9 +15,9 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         super(MyWindow, self).__init__(parent)
         self.setupUi(self)
         self.s = s
-        self.bursar_window = QDialog()
-        self.bursar_dialog = Ui_Dialog()
-        self.bursar_dialog.setupUi(self.bursar_window)
+        # self.bursar_window = QDialog()
+        self.bursar_window = Ui_Dialog()
+        # self.bursar_dialog.setupUi(self.bursar_window)
         # main game items
         self.step = QtWidgets.QPushButton(self.centralwidget)
         self.step.setGeometry(QtCore.QRect(683, 140, 65, 56))
@@ -79,7 +79,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         self.info.setText("")
         self.info.setObjectName("info")
         self.buy_info = QtWidgets.QLabel(self.centralwidget)
-        self.buy_info.setGeometry(QtCore.QRect(370, 390, 231, 71))
+        self.buy_info.setGeometry(QtCore.QRect(370, 390, 240, 71))
         self.buy_info.setStyleSheet("border-image: url(:/game/infoframe.png);\n"
                                     "font: 18pt \"appo paint\"")
         self.buy_info.setText("")
@@ -120,13 +120,13 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         self.player2.setObjectName("player2")
 
         self.yes = QtWidgets.QPushButton(self.centralwidget)
-        self.yes.setGeometry(QtCore.QRect(630, 410, 71, 31))
+        self.yes.setGeometry(QtCore.QRect(650, 410, 71, 31))
         self.yes.setStyleSheet("border-image: url(:/figure/yes.png);")
         self.yes.setText("")
         self.yes.setObjectName("yes")
 
         self.no = QtWidgets.QPushButton(self.centralwidget)
-        self.no.setGeometry(QtCore.QRect(730, 410, 71, 31))
+        self.no.setGeometry(QtCore.QRect(750, 410, 71, 31))
         self.no.setStyleSheet("border-image: url(:/figure/no.png);")
         self.no.setText("")
         self.no.setObjectName("no")
@@ -375,6 +375,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         # self.repaint()
 
     def roll(self):
+        self.fate.hide()
         if self.anim1.state() != self.anim1.Running and self.anim2.state() != self.anim2.Running:
             num = random.randint(1, 6)
             num = 3
@@ -416,16 +417,20 @@ class MyWindow(QMainWindow, Ui_MainWindow):
             # fate part
             if building.objectName() == "bursar":
                 self.bursar_window.show()
+                self.bursar_window.set_info_text(player.get_max_loan(), player.get_money())
                 # player.cash += 1000
                 # self.fate.setText("Get funded by bursar.")
                 self.yes.show()
-                self.yes.clicked.connect(self.reject)
+                self.yes.clicked.connect(lambda: self.finish_loan(player))
+                self.buy_info.setText("Click here to finish loan.")
+                self.buy_info.show()
             # other fates here
             elif building.objectName() == "CDC":
                 pass
             elif building.objectName() == "student_life":
                 destiny = self.destiny(player)
                 self.fate.setText(destiny)
+                self.fate.show()
                 self.yes.show()
                 self.yes.clicked.connect(self.reject)
             # update once after fate.
@@ -465,7 +470,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
                     self.yes.clicked.connect(lambda: self.buy(player, building))
                     self.yes.show()
                     self.no.show()
-            self.fate.show()
+
             self.set_player1_info()
             self.set_player2_info()
         else:
@@ -494,6 +499,26 @@ class MyWindow(QMainWindow, Ui_MainWindow):
     def reject(self):
         self.fate.hide()
         self.fate.setText("")
+        self.yes.hide()
+        self.no.hide()
+        self.yes.disconnect()
+        self.buy_info.hide()
+        self.info.hide()
+        self.step.setEnabled(True)
+
+    def finish_loan(self, player):
+        assert isinstance(player, Player)
+        loan_result = self.bursar_window.result
+        if loan_result is not None:
+            self.fate.setText("You have successfully loan ${}.".format(loan_result))
+            self.fate.show()
+            player.loan_money(loan_result)
+            player.cash += loan_result
+        else:
+            self.fate.setText("The amount you claim exceeds the \nlimit you can loan.")
+            self.fate.show()
+        self.set_player1_info()
+        self.set_player2_info()
         self.yes.hide()
         self.no.hide()
         self.yes.disconnect()
