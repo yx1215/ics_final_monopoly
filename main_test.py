@@ -85,7 +85,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         self.buy_info.setText("")
         self.buy_info.setObjectName("buy_info")
         self.fate = QtWidgets.QLabel(self.centralwidget)
-        self.fate.setGeometry(QtCore.QRect(370, 310, 451, 41))
+        self.fate.setGeometry(QtCore.QRect(370, 310, 451, 80))
         self.fate.setStyleSheet("border-image: url(:/game/infoframe.png);\n"
                                 "font: 18pt \"appo paint\"")
         self.fate.setText("")
@@ -426,7 +426,11 @@ class MyWindow(QMainWindow, Ui_MainWindow):
                 self.buy_info.show()
             # other fates here
             elif building.objectName() == "CDC":
-                pass
+                chance = self.chance(player)
+                self.fate.setText(chance)
+                self.fate.show()
+                self.yes.show()
+                self.yes.clicked.connect(self.reject)
             elif building.objectName() == "student_life":
                 destiny = self.destiny(player)
                 self.fate.setText(destiny)
@@ -546,10 +550,26 @@ class MyWindow(QMainWindow, Ui_MainWindow):
                         ['You lost your campus card,  \nyou have to go to Public Safety \nto replace it for $5000.', 5000],
                         ['You bought tickets and clothes \nfor Spring Formal for $1000.', 1000]]
         chosen_destiny = random.choice(list_destiny)
-        if chosen_destiny[1] > 10:
-            lost = chosen_destiny[1]
-            player.cash -= lost
+        lost = chosen_destiny[1]
+        player.cash -= lost
         return chosen_destiny[0]
+
+    def chance(self, player):
+        assert isinstance(player, Player)
+        list_chance = [
+            ['You have been offered for the position of Residence-hall Assistant\nand get payment for $3000!', 3000],
+            ['You have been recommended an internship by the professor\nand get payment for $2000!', 2000],
+            ['You get the tuition-fee refund for $2000!', 2000],
+            ['You have been offered for the position of Orientation Ambassador\nand get payment for $1500!', 1500],
+            ['You have been offered for the position of researching assistant\nand get payment for $1000!', 1000],
+            ['You have been offered a on-campus job and get payment for $1000!', 1000],
+            ['You win the prize of $1000 by taking a survey!', 1000],
+            ['You participate in an event and get free lunch of $500 in return!', 5000],
+            ['You get additional $5000 voucher from Starbucks!', 5000]]
+        chosen_chance = random.choice(list_chance)
+        earn = chosen_chance[1]
+        player.cash += earn
+        return chosen_chance[0]
 
     def update_board(self, msg):
         if msg["update"] == "roll":

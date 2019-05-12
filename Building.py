@@ -98,11 +98,11 @@ class Player(QLabel):
 
     def fine_money(self, level):
         if level == 0:
-            m = 0
+            m = 5000
         elif level == 1:
-            m = 1000
+            m = 10000
         elif level == 2:
-            m = 2000
+            m = 20000
         self.cash -= m
         return m
 
