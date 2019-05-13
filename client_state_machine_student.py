@@ -123,12 +123,18 @@ class ClientSM:
 # This is event handling instate "S_CHATTING"
 #==============================================================================
         elif self.state == S_CHATTING:
+            try:
+                self.myWind.destroy()
+            except:
+                pass
             if len(my_msg) > 0:     # my stuff going out
 
                 if my_msg == "game":
                     mysend(self.s, json.dumps({"action": "to_game", "from": self.me}))
                     self.state = S_GAMING
                     self.app.startingUp()
+                    self.myWind = MyWindow(self.s)
+                    self.myWind.setObjectName(self.me)
                     self.myWind.show()
                     self.myWind.setName1(self.me)
                     self.myWind.setName2(self.peer)
@@ -148,13 +154,16 @@ class ClientSM:
                     self.state = S_LOGGEDIN
                 elif peer_msg["action"] == "connect":
                     name = peer_msg["from"]
+                    self.peer = name
                     self.out_msg += "Hello, {0}".format(name)
                 elif peer_msg["action"] == "to_game":
-                    print("here")
                     self.state = S_GAMING
                     self.app.startingUp()
+                    self.myWind = MyWindow(self.s)
+                    self.myWind.setObjectName(self.me)
                     self.myWind.show()
-
+                    self.myWind.setName1(peer_msg["from"])
+                    self.myWind.setName2(self.me)
             # Display the menu again
             if self.state == S_LOGGEDIN:
                 self.out_msg += menu
@@ -162,15 +171,16 @@ class ClientSM:
 
             if len(peer_msg) > 0:
                 peer_msg = json.loads(peer_msg)
-                print(peer_msg)
                 if peer_msg["action"] == "gaming":
                     self.myWind.update_board(peer_msg)
             self.app.processEvents()
+
             if self.myWind.isHidden():
+                self.app.processEvents()
                 self.out_msg += "Back to normal chat."
                 d = {"action": "gaming", "update": "stop"}
+                self.app.exit()
                 mysend(self.s, json.dumps(d))
-                self.myWind = MyWindow(self.s)
                 self.state = S_CHATTING
 
 #==============================================================================

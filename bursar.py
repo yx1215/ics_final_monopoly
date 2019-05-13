@@ -65,6 +65,7 @@ class Ui_Dialog(QDialog):
         self.yiwan.clicked.connect(self.get_yiwan)
         self.liangwan.clicked.connect(self.get_liangwan)
         self.wuwan.clicked.connect(self.get_wuwan)
+        self.reject.clicked.connect(self.get_zero)
         self.limit = 0
 
     def retranslateUi(self):
@@ -84,22 +85,22 @@ class Ui_Dialog(QDialog):
         self.hide()
 
     def get_liangwan(self):
-        if self.limit >= 50000:
-            self.result = 50000
+        if self.limit >= 20000:
+            self.result = 20000
         else:
             self.result = None
         self.hide()
 
     def get_yiwan(self):
-        if self.limit >= 50000:
-            self.result = 50000
+        if self.limit >= 10000:
+            self.result = 10000
         else:
             self.result = None
         self.hide()
 
     def get_wuqian(self):
-        if self.limit >= 50000:
-            self.result = 50000
+        if self.limit >= 5000:
+            self.result = 5000
         else:
             self.result = None
         self.hide()
