@@ -66,20 +66,21 @@ class Player(QLabel):
 
     def pay_debt(self):
         print("pay debt")
-        if self.pay_back_time_remaining > 1 and self.loaned_money != 0:
-            self.pay_back_time_remaining -= 1
-        else:
-            money_to_pay = self.money_to_pay()
-            if self.cash >= money_to_pay:
-                self.cash -= money_to_pay
-                self.pay_back_time_total = 0
-                self.pay_back_time_remaining = 0
-                self.loaned_money = 0
-                return True
+        if self.loaned_money != 0:
+            if self.pay_back_time_remaining > 1:
+                self.pay_back_time_remaining -= 1
             else:
-                self.pay_back_time_total += 1
-                self.pay_back_time_remaining += 1
-                return False
+                money_to_pay = self.money_to_pay()
+                if self.cash >= money_to_pay:
+                    self.cash -= money_to_pay
+                    self.pay_back_time_total = 0
+                    self.pay_back_time_remaining = 0
+                    self.loaned_money = 0
+                    return True
+                else:
+                    self.pay_back_time_total += 1
+                    self.pay_back_time_remaining += 1
+                    return False
 
     def initiate_color(self, suit):
         if suit == 1:

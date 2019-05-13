@@ -329,15 +329,15 @@ class MyWindow(QMainWindow, Ui_MainWindow):
 
     def set_player1_info(self):
         self.yelname.setText(str(self.player1.name))
-        self.yelcash.setText(str(self.player1.cash))
-        self.yelmoney.setText(str(self.player1.get_money()))
-        self.yelhouse.setText(str(self.player1.land))
+        self.yelcash.setText(str(int(self.player1.cash)))
+        self.yelmoney.setText(str(int(self.player1.get_money())))
+        self.yelhouse.setText(str(int(self.player1.get_house())))
 
     def set_player2_info(self):
         self.bluename.setText(str(self.player2.name))
-        self.bluecash.setText(str(self.player2.cash))
-        self.bluemoney.setText(str(self.player2.get_money()))
-        self.bluehouse.setText(str(self.player2.land))
+        self.bluecash.setText(str(int(self.player2.cash)))
+        self.bluemoney.setText(str(int(self.player2.get_money())))
+        self.bluehouse.setText(str(self.player2.get_house()))
 
     def show_main_game(self):
         self.set_player1_info()
@@ -382,7 +382,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         self.fate.hide()
         if self.anim1.state() != self.anim1.Running and self.anim2.state() != self.anim2.Running:
             num = random.randint(1, 6)
-            num = 25
+            num = 6
             if self.turn_count % 2 == 0:
                 curr_x, curr_y = self.bdposition[self.player1.count]
                 next_count = (self.player1.count + num) % 26
@@ -457,7 +457,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         else:
             other = self.player1
         building = self.building_dic[(x, y)]
-        self.fate.setText("")
+        # self.fate.setText("")
         self.info.setText("")
         self.buy_info.setText("")
         if building is not None:
@@ -493,6 +493,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
             # buy land
             # if building.objectName() not in ["bursar", "CDC", "student_life"]:
             else:
+                # self.fate.setText("")
                 if building.owner is None:
                     building_name = building.objectName()
                     self.info.setText("You are passing {0}.".format(building_name))
@@ -533,10 +534,13 @@ class MyWindow(QMainWindow, Ui_MainWindow):
             self.set_player1_info()
             self.set_player2_info()
         else:
+            d = {"action": "gaming", "update": "passing_building", "x": x, "y": y,
+                 "player": 1 if player.name == self.player1.name else 2}
+            mysend(self.s, json.dumps(d))
             self.info.setText("No buildings to buy here.")
             self.info.show()
             self.yes.show()
-            self.yes.clicked.connect(self.reject)
+            self.yes.clicked.connect(self.confirm)
 
     def pass_building_update(self, player, x, y, msg):
         assert isinstance(player, Player)
@@ -732,9 +736,9 @@ class MyWindow(QMainWindow, Ui_MainWindow):
             if self.turn_count % 2 == 0:
                 curr_x, curr_y = self.bdposition[self.player1.count]
                 next_count = (self.player1.count + num) % 26
-
+                bankrupt = self.player1.bankrupt()
                 if next_count < self.player1.count:
-                    if self.player1.bankrupt():
+                    if bankrupt:
                         self.info.setText("{} bankrupt, {} wins.".format(self.player1.name, self.player2.name))
                         self.info.show()
                         self.yes.clicked.connect(self.end)
@@ -743,25 +747,28 @@ class MyWindow(QMainWindow, Ui_MainWindow):
                         success = self.player1.pay_debt()
                         if success is not None:
                             if success:
-                                self.fate.setText("Successfully pay back you debt.")
+                                self.fate.setText("{} successfully pays back his debt.".format(self.player1.name))
                             else:
-                                self.fate.setText("No enough money to pay your debt")
+                                self.fate.setText("{} has no enough money to pay debt.".format(self.player1.name))
                             self.fate.show()
                             self.set_player1_info()
                             self.set_player2_info()
-
-                next_x, next_y = self.bdposition[next_count]
-                self.stepnum.setText("{}".format(num))
-                self.player1.count = next_count
-                self.anim1.setStartValue(QRect(curr_x, curr_y, 41, 51))
-                self.anim1.setEndValue(QRect(next_x, next_y, 41, 51))
-                self.anim1.start()
+                else:
+                    bankrupt = False
+                if not bankrupt:
+                    next_x, next_y = self.bdposition[next_count]
+                    self.stepnum.setText("{}".format(num))
+                    self.player1.count = next_count
+                    self.anim1.setStartValue(QRect(curr_x, curr_y, 41, 51))
+                    self.anim1.setEndValue(QRect(next_x, next_y, 41, 51))
+                    self.anim1.start()
             else:
                 curr_x, curr_y = self.bdposition[self.player2.count]
                 next_count = (self.player2.count + num) % 26
                 # pay debt and check bankrupt
+                bankrupt = self.player2.bankrupt()
                 if next_count < self.player2.count:
-                    if self.player2.bankrupt():
+                    if bankrupt:
                         self.info.setText("{} bankrupt, {} wins.".format(self.player2.name, self.player1.name))
                         self.info.show()
                         self.yes.clicked.connect(self.end)
@@ -770,19 +777,22 @@ class MyWindow(QMainWindow, Ui_MainWindow):
                         success = self.player2.pay_debt()
                         if success is not None:
                             if success:
-                                self.fate.setText("Successfully pay back you debt.")
+                                self.fate.setText("{} successfully pays back his debt.".format(self.player2.name))
                             else:
-                                self.fate.setText("No enough money to pay your debt")
+                                self.fate.setText("{} has no enough money to pay debt.".format(self.player2.name))
                             self.fate.show()
                             self.set_player1_info()
                             self.set_player2_info()
+                else:
+                    bankrupt = False
 
-                next_x, next_y = self.bdposition[next_count]
-                self.stepnum.setText("{}".format(num))
-                self.player2.count = next_count
-                self.anim2.setStartValue(QRect(curr_x, curr_y, 41, 51))
-                self.anim2.setEndValue(QRect(next_x, next_y, 41, 51))
-                self.anim2.start()
+                if not bankrupt:
+                    next_x, next_y = self.bdposition[next_count]
+                    self.stepnum.setText("{}".format(num))
+                    self.player2.count = next_count
+                    self.anim2.setStartValue(QRect(curr_x, curr_y, 41, 51))
+                    self.anim2.setEndValue(QRect(next_x, next_y, 41, 51))
+                    self.anim2.start()
             self.turn.setText("{}".format(self.turn_count // 2 + 1))
             self.turn_count += 1
         elif msg["update"] == "start":
@@ -795,8 +805,8 @@ class MyWindow(QMainWindow, Ui_MainWindow):
             self.hide()
 
         elif msg["update"] == "passing_building":
-            # print("I am here passing_building")
-            # print(msg)
+            print("I am here passing_building")
+            print(msg)
             if msg["player"] == 1:
                 player = self.player1
             else:

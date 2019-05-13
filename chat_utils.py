@@ -23,7 +23,7 @@ S_GAMING = 4
 
 SIZE_SPEC = 6
 
-CHAT_WAIT = 0.2
+CHAT_WAIT = 0.02
 
 def print_state(state):
     print('**** State *****::::: ')

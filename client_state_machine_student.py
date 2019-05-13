@@ -174,7 +174,7 @@ class ClientSM:
                 if peer_msg["action"] == "gaming":
                     self.myWind.update_board(peer_msg)
             self.app.processEvents()
-
+            # self.app.processEvents()
             if self.myWind.isHidden():
                 self.app.processEvents()
                 self.out_msg += "Back to normal chat."
