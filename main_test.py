@@ -821,8 +821,8 @@ class MyWindow(QMainWindow, Ui_MainWindow):
             self.hide()
 
         elif msg["update"] == "passing_building":
-            print("I am here passing_building")
-            print(msg)
+            # print("I am here passing_building")
+            # print(msg)
             if msg["player"] == 1:
                 player = self.player1
             else:
