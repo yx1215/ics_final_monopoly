@@ -25,53 +25,67 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         self.step.setText("")
         self.step.setObjectName("step")
         self.yelmoney = QtWidgets.QLabel(self.centralwidget)
-        self.yelmoney.setGeometry(QtCore.QRect(240, 185, 71, 21))
+        self.yelmoney.setGeometry(QtCore.QRect(240, 184, 71, 15))
         self.yelmoney.setStyleSheet("border-image: url(:/game/white.png);\n"
-                                    "font: 20pt \"appo paint\";")
+                                    "font: 15pt \"appo paint\";")
         self.yelmoney.setText("")
         self.yelmoney.setObjectName("yelmoney")
         self.yelcash = QtWidgets.QLabel(self.centralwidget)
-        self.yelcash.setGeometry(QtCore.QRect(240, 212, 71, 21))
+        self.yelcash.setGeometry(QtCore.QRect(240, 205, 71, 15))
         self.yelcash.setStyleSheet("border-image: url(:/game/white.png);\n"
-                                   "font: 20pt \"appo paint\";")
+                                   "font: 15pt \"appo paint\";")
         self.yelcash.setText("")
         self.yelcash.setObjectName("yelcash")
         self.yelhouse = QtWidgets.QLabel(self.centralwidget)
-        self.yelhouse.setGeometry(QtCore.QRect(240, 240, 71, 21))
+        self.yelhouse.setGeometry(QtCore.QRect(240, 230, 71, 15))
         self.yelhouse.setStyleSheet("border-image: url(:/game/white.png);\n"
-                                    "font: 20pt \"appo paint\";")
+                                    "font: 15pt \"appo paint\";")
         self.yelhouse.setText("")
         self.yelhouse.setObjectName("yelhouse")
         self.yelname = QtWidgets.QLabel(self.centralwidget)
-        self.yelname.setGeometry(QtCore.QRect(233, 156, 121, 21))
+        self.yelname.setGeometry(QtCore.QRect(233, 156, 81, 21))
         self.yelname.setStyleSheet("border-image: url(:/game/white.png);\n"
                                    "font: 20pt \"appo paint\";")
         self.yelname.setText("")
         self.yelname.setObjectName("yelname")
+        self.yelloan = QtWidgets.QLabel(self.centralwidget)
+        self.yelloan.setGeometry(QtCore.QRect(240, 253, 71, 15))
+        self.yelloan.setStyleSheet("border-image: url(:/game/white.png);\n"
+                                   "font: 15pt \"appo paint\";")
+        self.yelloan.setText("")
+        self.yelloan.setObjectName("yelloan")
+
         self.bluehouse = QtWidgets.QLabel(self.centralwidget)
-        self.bluehouse.setGeometry(QtCore.QRect(239, 415, 71, 21))
+        self.bluehouse.setGeometry(QtCore.QRect(240, 401, 71, 15))
         self.bluehouse.setStyleSheet("border-image: url(:/game/white.png);\n"
-                                     "font: 20pt \"appo paint\";")
+                                     "font: 15pt \"appo paint\";")
         self.bluehouse.setText("")
         self.bluehouse.setObjectName("bluehouse")
         self.bluename = QtWidgets.QLabel(self.centralwidget)
-        self.bluename.setGeometry(QtCore.QRect(233, 331, 121, 21))
+        self.bluename.setGeometry(QtCore.QRect(231, 329, 81, 21))
         self.bluename.setStyleSheet("border-image: url(:/game/white.png);\n"
                                     "font: 20pt \"appo paint\";")
         self.bluename.setText("")
         self.bluename.setObjectName("bluename")
         self.bluecash = QtWidgets.QLabel(self.centralwidget)
-        self.bluecash.setGeometry(QtCore.QRect(239, 387, 71, 21))
+        self.bluecash.setGeometry(QtCore.QRect(240, 377, 71, 15))
         self.bluecash.setStyleSheet("border-image: url(:/game/white.png);\n"
-                                    "font: 20pt \"appo paint\";")
+                                    "font: 15pt \"appo paint\";")
         self.bluecash.setText("")
         self.bluecash.setObjectName("bluecash")
         self.bluemoney = QtWidgets.QLabel(self.centralwidget)
-        self.bluemoney.setGeometry(QtCore.QRect(239, 360, 71, 21))
+        self.bluemoney.setGeometry(QtCore.QRect(240, 356, 71, 15))
         self.bluemoney.setStyleSheet("border-image: url(:/game/white.png);\n"
-                                     "font: 20pt \"appo paint\";")
+                                     "font: 15pt \"appo paint\";")
         self.bluemoney.setText("")
         self.bluemoney.setObjectName("bluemoney")
+
+        self.blueloan = QtWidgets.QLabel(self.centralwidget)
+        self.blueloan.setGeometry(QtCore.QRect(240, 425, 71, 15))
+        self.blueloan.setStyleSheet("border-image: url(:/game/white.png);\n"
+                                    "font: 15pt \"appo paint\";")
+        self.blueloan.setText("")
+        self.blueloan.setObjectName("blueloan")
         self.info = QtWidgets.QLabel(self.centralwidget)
         self.info.setGeometry(QtCore.QRect(370, 351, 451, 41))
         self.info.setStyleSheet("border-image: url(:/game/infoframe.png);\n"
@@ -332,12 +346,14 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         self.yelcash.setText(str(int(self.player1.cash)))
         self.yelmoney.setText(str(int(self.player1.get_money())))
         self.yelhouse.setText(str(int(self.player1.get_house())))
+        self.yelloan.setText(str(int(self.player1.loaned_money)))
 
     def set_player2_info(self):
         self.bluename.setText(str(self.player2.name))
         self.bluecash.setText(str(int(self.player2.cash)))
         self.bluemoney.setText(str(int(self.player2.get_money())))
-        self.bluehouse.setText(str(self.player2.get_house()))
+        self.bluehouse.setText(str(int(self.player2.get_house())))
+        self.blueloan.setText(str(int(self.player2.loaned_money)))
 
     def show_main_game(self):
         self.set_player1_info()
@@ -372,7 +388,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
     def start(self):
         d = {"action": "gaming", "update": "start"}
         mysend(self.s, json.dumps(d))
-        self.graphicsView.setStyleSheet("border-image: url(:/figure/main_game_background.jpg);")
+        self.graphicsView.setStyleSheet("border-image: url(:/figure/life_in_NYUSH_v2.jpg);")
         self.hide_cover()
         self.show_main_game()
         # self.bursar_window.show()
@@ -382,7 +398,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         self.fate.hide()
         if self.anim1.state() != self.anim1.Running and self.anim2.state() != self.anim2.Running:
             num = random.randint(1, 6)
-            num = 6
+            # num = 6
             if self.turn_count % 2 == 0:
                 curr_x, curr_y = self.bdposition[self.player1.count]
                 next_count = (self.player1.count + num) % 26
@@ -796,7 +812,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
             self.turn.setText("{}".format(self.turn_count // 2 + 1))
             self.turn_count += 1
         elif msg["update"] == "start":
-            self.graphicsView.setStyleSheet("border-image: url(:/figure/main_game_background.jpg);")
+            self.graphicsView.setStyleSheet("border-image: url(:/figure/life_in_NYUSH_v2.jpg);")
             self.hide_cover()
             self.show_main_game()
             self.step.setEnabled(False)

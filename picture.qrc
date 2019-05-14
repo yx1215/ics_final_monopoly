@@ -16,5 +16,6 @@
         <file alias="20000.png">./figure/20000.png</file>
         <file alias="50000.png">./figure/50000.png</file>
         <file alias="bursarinfo.png">./figure/bursarinfo.png</file>
+        <file alias="life_in_NYUSH_v2.jpg">./figure/life_in_NYUSH_v2.jpg</file>
     </qresource>
 </RCC>
