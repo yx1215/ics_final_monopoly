@@ -1,4 +1,4 @@
-# ics_final_for_lexy
+# ics_final_monopoly
 ## 1. How to add pictures to Qt Designer Resource:
 You can find a file called `picture.qrc`. Inside it you will find the following code:
 
